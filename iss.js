@@ -108,7 +108,15 @@ const nextISSTimesForMyLocation = () => {
       });
     });
   }
-  return [promiseToFetchMyIP, promiseToFetchCoordsByIP, promiseToFetchISSFlyOverTimes];
+  promiseToFetchMyIP().then((fromFetchMyIP) => {
+    return promiseToFetchCoordsByIP(fromFetchMyIP);
+  }).then((fromFetchCoordsByIP) => {
+    return promiseToFetchISSFlyOverTimes(fromFetchCoordsByIP);
+  }).then((fromfetchISSFlyOverTimes) => {
+    console.log(fromfetchISSFlyOverTimes);
+  }).catch((error) => {
+    console.log(`It didn't work!\n${error}`);
+  });
 }
 
 module.exports = {
