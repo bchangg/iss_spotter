@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/bchangg/iss_spotter/issues"
   },
-  "homepage": "https://github.com/bchangg/iss_spotter#readme"
+  "homepage": "https://github.com/bchangg/iss_spotter#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
 }
