@@ -13,9 +13,11 @@ const fetchMyIP = (callback) => {
   request("https://api.ipify.org?format=json", (error, response, body) => {
     if (error) {
       callback(error, null);
+      return;
     }
     if (response.statusCode !== 200) {
       callback(Error(`Status Code ${response.statusCode} when fetching IP. Reponse: ${body}`), null);
+      return;
     }
     const ip = JSON.parse(body).ip;
     callback(error, ip);
@@ -41,9 +43,11 @@ const fetchCoordsByIP = (ip, callback) => {
     };
     if (error) {
       callback(error, null);
+      return;
     }
     if (response.statusCode !== 200) {
       callback(Error(`Status Code ${response.statusCode} when fetching coordinates for IP. Response: ${body}`), null);
+      return;
     }
     callback(error, coordinates);
   });
@@ -63,9 +67,11 @@ const fetchISSFlyOverTimes = (coords, callback) => {
   request(`http://api.open-notify.org/iss-pass.json?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
     if (error) {
       callback(error, null);
+      return;
     }
     if (response.statusCode !== 200) {
       callback(Error(`Status Code ${response.statusCode} when fetching ISS pass times: ${body}`), null);
+      return;
     }
     const passoverInfo = JSON.parse(body).response;
     callback(error, passoverInfo);
@@ -117,6 +123,7 @@ const nextISSTimesForMyLocation = () => {
   }).catch((error) => {
     console.log(`It didn't work!\n${error}`);
   });
+
 }
 
 module.exports = {
