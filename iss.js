@@ -79,51 +79,65 @@ const fetchISSFlyOverTimes = (coords, callback) => {
 };
 
 
-const nextISSTimesForMyLocation = () => {
-  // empty for now
-  let promiseToFetchMyIP = () => {
-    return new Promise((resolve, reject) => {
-      fetchMyIP((error, ip) => {
+const nextISSTimesForMyLocation = function(callback) {
+  fetchMyIP((error, ip) => {
+    if (error) {
+      return callback(error, null);
+    }
+    fetchCoordsByIP(ip, (error, location) => {
+      if (error) {
+        return callback(error, null);
+      }
+      fetchISSFlyOverTimes(location, (error, nextPasses) => {
         if (error) {
-          reject(error);
-        } else {
-          resolve(ip);
+          return callback(error, null);
         }
+        callback(null, nextPasses);
       });
     });
-  }
-  let promiseToFetchCoordsByIP = (ip) => {
-    return new Promise((resolve, reject) => {
-      fetchCoordsByIP(ip, (error, coordinates) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(coordinates);
-        }
-      });
-    });
-  }
-  let promiseToFetchISSFlyOverTimes = (coordinates) => {
-    return new Promise((resolve, reject) => {
-      fetchISSFlyOverTimes(coordinates, (error, passoverInfo) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(passoverInfo);
-        }
-      });
-    });
-  }
-  promiseToFetchMyIP().then((fromFetchMyIP) => {
-    return promiseToFetchCoordsByIP(fromFetchMyIP);
-  }).then((fromFetchCoordsByIP) => {
-    return promiseToFetchISSFlyOverTimes(fromFetchCoordsByIP);
-  }).then((fromfetchISSFlyOverTimes) => {
-    console.log(fromfetchISSFlyOverTimes);
-  }).catch((error) => {
-    console.log(`It didn't work!\n${error}`);
   });
-
+  // let promiseToFetchMyIP = () => {
+  //   return new Promise((resolve, reject) => {
+  //     fetchMyIP((error, ip) => {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(ip);
+  //       }
+  //     });
+  //   });
+  // }
+  // let promiseToFetchCoordsByIP = (ip) => {
+  //   return new Promise((resolve, reject) => {
+  //     fetchCoordsByIP(ip, (error, coordinates) => {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(coordinates);
+  //       }
+  //     });
+  //   });
+  // }
+  // let promiseToFetchISSFlyOverTimes = (coordinates) => {
+  //   return new Promise((resolve, reject) => {
+  //     fetchISSFlyOverTimes(coordinates, (error, passoverInfo) => {
+  //       if (error) {
+  //         reject(error);
+  //       } else {
+  //         resolve(passoverInfo);
+  //       }
+  //     });
+  //   });
+  // }
+  // promiseToFetchMyIP().then((fromFetchMyIP) => {
+  //   return promiseToFetchCoordsByIP(fromFetchMyIP);
+  // }).then((fromFetchCoordsByIP) => {
+  //   return promiseToFetchISSFlyOverTimes(fromFetchCoordsByIP);
+  // }).then((fromfetchISSFlyOverTimes) => {
+  //   console.log(fromfetchISSFlyOverTimes);
+  // }).catch((error) => {
+  //   console.log(`It didn't work!\n${error}`);
+  // });
 }
 
 module.exports = {
